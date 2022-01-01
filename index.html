@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://kit.fontawesome.com/e71f8bf7e9.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>Tic-Tac-Toe</title>
+</head>
+<body>
+    <div class="two-player-form-container form-container">
+        <form class="two-player-form">
+            <h1>2-Player</h1>
+            <div class="form-input">
+                <label for="player-1-name">Player 1 Name: </label>
+                <input type="text" class="player-1-name" name="player-1-name" placeholder="Player 1 Name">
+                <label for="player-2-name">Player 2 Name: </label>
+                <input type="text" class="player-2-name" name="player-2-name" placeholder="Player 2 Name">
+            </div>
+            <div class="submit-container">
+                <button class="submit-btn" type="submit">Submit</button>
+                <button class="cancel-btn" type="submit">Cancel</button>
+            </div>
+        </form>
+    </div>
+    <div class="single-player-form-container form-container">
+        <form class="single-player-form">
+            <h1>Singleplayer</h1>
+            <div class="form-input">
+                <label for="player-name">Player Name: </label>
+                <input type="text" class="player-name" name="player-name" placeholder="Player Name">
+            </div> 
+            <div class="submit-container">
+                <button class="submit-btn" type="submit">Submit</button>
+                <button class="cancel-btn" type="submit">Cancel</button>
+            </div>
+        </form>
+    </div>
+    <main>
+        <header>
+            <h1>Tic Tac Toe</h1>
+        </header>
+        <div class="state-message">
+            <h2>Choose Your Game Mode</h2>
+        </div>
+        <form class="game-mode-selection">
+            <button class="game-mode singleplayer" type="submit">
+                <h3>Singleplayer</h3>
+                <div class="user-icon">
+                    <i class="fas fa-user fa-10x"></i>
+                </div>
+            </button>
+            <button class="game-mode 2-player" type="submit">
+                <h3>2 Player</h3>
+                <div class="user-icon">
+                    <i class="fas fa-users fa-10x"></i>
+                </div>
+            </button>
+        </form>
+        <div class="game-container">
+            <div class="score-container">
+                <h3 class="score-header">P1 Score</h3>
+                <p class="score">0</p>
+            </div>
+            <div class="board-container">
+                <div class="board"></div>
+            </div>
+            <div class="score-container">
+                <h3 class="score-header">P2 Score</h3>
+                <p class="score">0</p>
+            </div>
+            <div class="bottom-btns">
+                <button class="play-again-btn">Play Again</button>
+                <button class="change-mode-btn">Change Mode</button>
+            </div>
+        </div>
+    </main>
+    <script src="index.js"></script>
+</body>
+</html>
