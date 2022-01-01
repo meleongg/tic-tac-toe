@@ -137,9 +137,15 @@ form h1 {
 }
 
 .score {
-    font-size: 60px;
+    font-size: 80px;
     font-weight: 800;
-    padding-top: 60px;
+    padding-top: 20px;
+}
+
+.symbol {
+    font-size: 40px;
+    font-weight: 800;
+    padding-top: 10px;
 }
 
 .board-container {

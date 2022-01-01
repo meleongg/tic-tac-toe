@@ -156,9 +156,7 @@ const gameBoard = (() => {
                 }
             }
         }
-
-        console.log(_checkIndices(indices))
-
+        
         if (_checkIndices(indices)) {
             return true;
         } else {
@@ -203,13 +201,21 @@ const gameBoard = (() => {
         });
     }
 
+    const _goToMenu = () => {
+        const gameContainer = document.getElementsByClassName("game-container")[0];
+        const gameModeSelection = document.getElementsByClassName("game-mode-selection")[0];
+        gameContainer.style.display = "none";
+        gameModeSelection.style.display = "grid";
+        displayController.updateStateMessage("menu");
+    }
+
     const _detectChangeMode = () => {
         const changeModeBtn = document.getElementsByClassName("change-mode-btn")[0];
         changeModeBtn.addEventListener("click", () => {
             _updateTurn();
             _clearBoard();
-
-
+            _goToMenu();
+            _gameOver = false;
         });
     }
 
@@ -220,7 +226,7 @@ const gameBoard = (() => {
             board[row][col] = turn.symbol;
             if (_checkWin(turn.symbol)) {
                 _gameOver = true;
-                displayController.produceWinner(turn);
+                displayController.updateStateMessage(turn);
                 turn.wins += 1;
                 displayController.renderScore([_player1, _player2]);
                 displayController.renderButtons();
@@ -228,7 +234,7 @@ const gameBoard = (() => {
                 _detectChangeMode();
             } else if (_checkTie()) {
                 _gameOver = true;
-                displayController.produceWinner("tie");
+                displayController.updateStateMessage("tie");
                 displayController.renderButtons();
                 _detectPlayAgain();
                 _detectChangeMode();
@@ -247,11 +253,13 @@ const displayController = (() => {
     const boardElm = document.getElementsByClassName("board")[0];
     const stateMsg = document.getElementsByClassName("state-message")[0];
 
-    const produceWinner = (winner) => {
-        if (typeof winner !== String) {
-            stateMsg.innerHTML = `${winner.name} is the winner!`;
-        } else {
+    const updateStateMessage = (msg) => {
+        if (typeof msg !== 'string') {
+            stateMsg.innerHTML = `${msg.name} is the winner!`;
+        } else if (msg === "tie") {
             stateMsg.innerHTML = `No one wins! Tie game!`;
+        } else {
+            stateMsg.innerHTML = `Choose Your Game Mode`;
         }
     }
 
@@ -305,5 +313,5 @@ const displayController = (() => {
         }
     }
 
-    return { renderBoard, renderTurn, produceWinner, renderScore, renderButtons };
+    return { renderBoard, renderTurn, updateStateMessage, renderScore, renderButtons };
 })();
