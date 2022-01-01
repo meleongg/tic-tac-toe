@@ -179,11 +179,12 @@ form h1 {
 
 .bottom-btns {
     grid-column: 1 / -1;
-    display: flex;
+    display: none;
     justify-content: space-evenly;
     align-items: center;
 }
 
 .bottom-btns button {
     font-size: 20px;
+    font-weight: 800;
 }

@@ -97,6 +97,7 @@ const gameBoard = (() => {
         } else {
             turn = _player1;
         }
+        displayController.renderScore([_player1, _player2]);
         displayController.renderTurn(turn);
     }
 
@@ -175,6 +176,43 @@ const gameBoard = (() => {
         displayController.renderTurn(turn);
     }
 
+    const _clearBoard = () => {
+        for (let i=0; i<board.length; i++) {
+            for (let j=0; j<board.length; j++) {
+                board[i][j] = "";
+            }
+        }
+    }
+
+    const _updateTurn = () => {
+        if (gameMode === "single") {
+            turn = _player;
+        } else {
+            turn = _player1;
+            displayController.renderTurn(turn);
+        }
+    }
+
+    const _detectPlayAgain = () => {
+        const playAgainBtn = document.getElementsByClassName("play-again-btn")[0];
+        playAgainBtn.addEventListener("click", () => {
+            _updateTurn();
+            _clearBoard();
+            displayController.renderBoard();
+            _gameOver = false;
+        });
+    }
+
+    const _detectChangeMode = () => {
+        const changeModeBtn = document.getElementsByClassName("change-mode-btn")[0];
+        changeModeBtn.addEventListener("click", () => {
+            _updateTurn();
+            _clearBoard();
+
+
+        });
+    }
+
     const updateBoard = (index) => {
         let row = index[0];
         let col = index[1];
@@ -183,9 +221,17 @@ const gameBoard = (() => {
             if (_checkWin(turn.symbol)) {
                 _gameOver = true;
                 displayController.produceWinner(turn);
+                turn.wins += 1;
+                displayController.renderScore([_player1, _player2]);
+                displayController.renderButtons();
+                _detectPlayAgain();
+                _detectChangeMode();
             } else if (_checkTie()) {
                 _gameOver = true;
                 displayController.produceWinner("tie");
+                displayController.renderButtons();
+                _detectPlayAgain();
+                _detectChangeMode();
             } else {
                 _switchTurn();
             }
@@ -196,6 +242,7 @@ const gameBoard = (() => {
     return { updateBoard, startGame };
 })();
 
+// functions to render HTML to screen
 const displayController = (() => {
     const boardElm = document.getElementsByClassName("board")[0];
     const stateMsg = document.getElementsByClassName("state-message")[0];
@@ -208,9 +255,8 @@ const displayController = (() => {
         }
     }
 
-    // functions to update what is rendered on the screen
-    const renderTurn = (turn) => {
-        stateMsg.innerHTML = `It is ${turn.name}'s move!`;
+    const renderTurn = (player) => {
+        stateMsg.innerHTML = `It is ${player.name}'s move!`;
     }
 
     const _detectClick = (sqr) => {
@@ -219,6 +265,27 @@ const displayController = (() => {
             index = [Number(index[0]), Number(index[2])];
             gameBoard.updateBoard(index);
         });
+    }
+
+    const _renderScoreHeaders = (players) => {
+        const p1ScoreHeader = document.getElementsByClassName("p1-score-header")[0];
+        const p2ScoreHeader = document.getElementsByClassName("p2-score-header")[0];
+
+        p1ScoreHeader.innerHTML = `${players[0].name} Score`;
+        p2ScoreHeader.innerHTML = `${players[1].name} Score`;
+    }
+
+    const renderScore = (players) => {
+        const p1Score = document.getElementsByClassName("p1-score")[0];
+        const p2Score = document.getElementsByClassName("p2-score")[0];
+        _renderScoreHeaders(players);
+        p1Score.innerHTML = players[0].wins;
+        p2Score.innerHTML = players[1].wins;
+    }
+
+    const renderButtons = () => {
+        const bottomBtns = document.getElementsByClassName("bottom-btns")[0];
+        bottomBtns.style.display = "flex";
     }
 
     const renderBoard = () => {
@@ -238,5 +305,5 @@ const displayController = (() => {
         }
     }
 
-    return { renderBoard, renderTurn, produceWinner };
+    return { renderBoard, renderTurn, produceWinner, renderScore, renderButtons };
 })();
