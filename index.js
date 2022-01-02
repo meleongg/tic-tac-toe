@@ -82,11 +82,12 @@ cancelBtns.forEach((btn) => {
     });
 });
 
+// creates "Player" objects
 const playerFactory = (name, wins, symbol) => {
-
     return {name, wins, symbol}
 };
 
+// stores all the functions that manipulate the gameboard array
 const gameBoard = (() => {
     let turn; 
     let _player1;
@@ -118,20 +119,16 @@ const gameBoard = (() => {
         if (sqr === "") {
             return true;
         } 
-        
         return false;
     }
 
-     // check if any subarray of winningIndices is in indices array
     const _checkIndices = (indices) => {
         const winningIndices = [["00", "10", "20"], ["01", "11", "21"], ["02", "12", "22"],
                                 ["00", "01", "02"], ["10", "11", "12"], ["20", "21", "22"],
                                 ["20", "11", "02"], ["00", "11", "22"]];
-        
         const checkMatch = (arr, target) => {
             return target.every(val => arr.includes(val));
         }
-
         for (let i=0; i<winningIndices.length; i++) {
             winningIndex = winningIndices[i];
             let match = checkMatch(indices, winningIndex);
@@ -140,7 +137,6 @@ const gameBoard = (() => {
                 return true;
             } 
         }
-
         return false;
     }
 
@@ -152,13 +148,11 @@ const gameBoard = (() => {
                 } 
             }
         }
-
         return true;
     }
 
     const _checkWin = (sym) => {
         let indices = []; 
-
         for (let i=0; i<board.length; i++) {
             for (let j=0; j<board.length; j++) {
                 if (board[i][j] === sym) {
@@ -166,7 +160,6 @@ const gameBoard = (() => {
                 }
             }
         }
-
         if (_checkIndices(indices)) {
             return true;
         } else {
@@ -198,7 +191,6 @@ const gameBoard = (() => {
             let row = randomSqr[0];
             let col = randomSqr[1];
             board[row][col] = sym;
-
             if (_checkWin(sym)) {
                 _gameOver = true;
                 displayController.updateStateMessage(_player2);
@@ -229,7 +221,6 @@ const gameBoard = (() => {
         } else {
             turn = _player1;
         }
-
         displayController.renderTurn(turn);
     }
 
@@ -303,7 +294,7 @@ const gameBoard = (() => {
         } 
     }
 
-    return { updateBoard, startGame };
+    return {updateBoard, startGame};
 })();
 
 // functions to render HTML to screen
@@ -376,5 +367,5 @@ const displayController = (() => {
         }
     }
 
-    return { renderBoard, renderTurn, updateStateMessage, renderScore, renderButtons, hideButtons };
+    return {renderBoard, renderTurn, updateStateMessage, renderScore, renderButtons, hideButtons};
 })();
