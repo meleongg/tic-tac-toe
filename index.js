@@ -12,6 +12,13 @@ let board = [["", "", ""],
              ["", "", ""], 
              ["", "", ""]];
 
+singlePlayerBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    const singlePlayerFormContainer = document.getElementsByClassName("single-player-form-container")[0];
+    singlePlayerFormContainer.style.display = "flex";
+    gameMode = "single";
+})
+
 twoPlayerBtn.addEventListener("click", (e) => {
     e.preventDefault();
     const twoPlayerFormContainer = document.getElementsByClassName("two-player-form-container")[0];
@@ -20,14 +27,19 @@ twoPlayerBtn.addEventListener("click", (e) => {
 });
 
 submitBtns.forEach((btn) => {
+    const singlePlayerFormContainer = document.getElementsByClassName("single-player-form-container")[0];
     const twoPlayerFormContainer = document.getElementsByClassName("two-player-form-container")[0];
     const gameModeSelection = document.getElementsByClassName("game-mode-selection")[0];
     const gameContainer = document.getElementsByClassName("game-container")[0];
 
     const getFormInfo = () => {
         if (gameMode === "single") {
-            const pName = document.getElementsByClassName("player-name")
-            return [pName.value];
+            const pName = document.getElementsByClassName("player-name")[0];
+            let pNameValue = pName.value;
+            if (pNameValue === "") {
+                pNameValue = "Player";
+            } 
+            return [pNameValue];
         } else {
             const p1Name = document.getElementsByClassName("player-1-name")[0];
             const p2Name = document.getElementsByClassName("player-2-name")[0];
@@ -46,15 +58,16 @@ submitBtns.forEach((btn) => {
     btn.addEventListener("click", (e) => {
         e.preventDefault();
         if (gameMode === "single") {
-            console.log("s") // -> validateInput()
+            singlePlayerFormContainer.style.display = "none";
         } else {
             twoPlayerFormContainer.style.display = "none";
-            gameModeSelection.style.display = "none"; // -> validateInput() & render board
-            gameContainer.style.display = "grid";
-            displayController.renderBoard();
-            formInfo = getFormInfo();
-            gameBoard.startGame(formInfo);
         }
+
+        gameModeSelection.style.display = "none"; 
+        gameContainer.style.display = "grid";
+        displayController.renderBoard();
+        formInfo = getFormInfo();
+        gameBoard.startGame(formInfo);
     });
 });
 
@@ -62,6 +75,7 @@ cancelBtns.forEach((btn) => {
     btn.addEventListener("click", (e) => {
         e.preventDefault();
         const twoPlayerFormContainer = document.getElementsByClassName("two-player-form-container")[0];
+        const singlePlayerFormContainer = document.getElementsByClassName("single-player-form-container")[0];
         twoPlayerFormContainer.style.display = "none";
         twoForm.reset();
     });
@@ -73,17 +87,15 @@ const playerFactory = (name, wins, symbol) => {
 };
 
 const gameBoard = (() => {
-    // functions to update the turn, etc.
-    // checkWin, checkPlace
     let turn; 
-    let _player;
     let _player1;
     let _player2;
     let _gameOver = false;
 
     const _initializePlayers = (vals) => {
         if (gameMode === "single") {
-            player = playerFactory(vals[0], 0, "X");
+            _player1 = playerFactory(vals[0], 0, "X");
+            _player2 = playerFactory("Computer", 0, "O");
         } else {
             _player1 = playerFactory(vals[0], 0, "X");
             _player2 = playerFactory(vals[1], 0, "O");
@@ -92,11 +104,7 @@ const gameBoard = (() => {
 
     const startGame = (vals) => {
         _initializePlayers(vals);
-        if (gameMode === "single") {
-            turn = _player;
-        } else {
-            turn = _player1;
-        }
+        turn = _player1;
         displayController.renderScore([_player1, _player2]);
         displayController.renderTurn(turn);
     }
@@ -156,7 +164,7 @@ const gameBoard = (() => {
                 }
             }
         }
-        
+
         if (_checkIndices(indices)) {
             return true;
         } else {
@@ -183,12 +191,8 @@ const gameBoard = (() => {
     }
 
     const _updateTurn = () => {
-        if (gameMode === "single") {
-            turn = _player;
-        } else {
-            turn = _player1;
-            displayController.renderTurn(turn);
-        }
+        turn = _player1;
+        displayController.renderTurn(turn);
     }
 
     const _detectPlayAgain = () => {
