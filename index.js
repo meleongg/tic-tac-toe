@@ -112,12 +112,13 @@ const gameBoard = (() => {
     const _checkEmpty = (index) => {
         let row = index[0];
         let col = index[1];
+        console.log(row, col)
         let sqr = board[row][col];
         if (sqr === "") {
             return true;
-        } else {
-            return false;
-        }
+        } 
+        
+        return false;
     }
 
      // check if any subarray of winningIndices is in indices array
@@ -172,9 +173,58 @@ const gameBoard = (() => {
         }
     }
 
+    const _chooseRandomSqr = () => {
+        const row = Math.floor(Math.random() * 3);
+        const col = Math.floor(Math.random() * 3);
+        return [row, col];
+    }
+
+    const _makeChoice = () => {
+        let choice = [];
+        let choosing = true;
+        while (choosing) {
+            choice = _chooseRandomSqr();
+            if (_checkEmpty(choice)) {
+                return choice;
+            }
+        }
+    }
+
+    const _makeAIMove = () => {
+        if (!_gameOver) {
+            let sym = _player2.symbol;
+            let randomSqr = _makeChoice();
+            let row = randomSqr[0];
+            let col = randomSqr[1];
+            board[row][col] = sym;
+
+            if (_checkWin(sym)) {
+                _gameOver = true;
+                displayController.updateStateMessage(_player2);
+                _player2.wins += 1;
+                displayController.renderScore([_player1, _player2]);
+                displayController.renderButtons();
+                _detectPlayAgain();
+                _detectChangeMode();
+            } else if (_checkTie()) {
+                _gameOver = true;
+                displayController.updateStateMessage("tie");
+                displayController.renderButtons();
+                _detectPlayAgain();
+                _detectChangeMode();
+            } else {
+                _switchTurn();
+            }
+            displayController.renderBoard();
+        }
+    }
+
     const _switchTurn = () => {
         if (turn === _player1) {
             turn = _player2;
+            if (gameMode === "single") {
+                _makeAIMove();
+            }
         } else {
             turn = _player1;
         }
@@ -201,6 +251,7 @@ const gameBoard = (() => {
             _updateTurn();
             _clearBoard();
             displayController.renderBoard();
+            displayController.hideButtons();
             _gameOver = false;
         });
     }
@@ -227,6 +278,7 @@ const gameBoard = (() => {
         let row = index[0];
         let col = index[1];
         if (_checkEmpty(index) && !_gameOver) {
+            console.log("worked")
             board[row][col] = turn.symbol;
             if (_checkWin(turn.symbol)) {
                 _gameOver = true;
@@ -300,6 +352,11 @@ const displayController = (() => {
         bottomBtns.style.display = "flex";
     }
 
+    const hideButtons = () => {
+        const bottomBtns = document.getElementsByClassName("bottom-btns")[0];
+        bottomBtns.style.display = "none";
+    }
+
     const renderBoard = () => {
         boardElm.innerHTML = "";
         for (let i=0; i<board.length; i++) {
@@ -317,5 +374,5 @@ const displayController = (() => {
         }
     }
 
-    return { renderBoard, renderTurn, updateStateMessage, renderScore, renderButtons };
+    return { renderBoard, renderTurn, updateStateMessage, renderScore, renderButtons, hideButtons };
 })();
