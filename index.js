@@ -77,6 +77,7 @@ cancelBtns.forEach((btn) => {
         const twoPlayerFormContainer = document.getElementsByClassName("two-player-form-container")[0];
         const singlePlayerFormContainer = document.getElementsByClassName("single-player-form-container")[0];
         twoPlayerFormContainer.style.display = "none";
+        singlePlayerFormContainer.style.display = "none";
         twoForm.reset();
     });
 });
@@ -270,6 +271,7 @@ const gameBoard = (() => {
             _updateTurn();
             _clearBoard();
             _goToMenu();
+            displayController.hideButtons();
             _gameOver = false;
         });
     }
